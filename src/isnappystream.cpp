@@ -18,9 +18,10 @@ namespace snappy {
 iSnappyStreambuf::iSnappyStreambuf(std::streambuf *src)
 	: src_(src)
 {
-	char source_magic[Config::magic_sz];
-	std::streamsize nread = src_->sgetn(source_magic, Config::magic_sz);
-	if (memcmp(Config::magic, source_magic, Config::magic_sz))
+	std::vector<char> source_magic;
+	source_magic.resize(Config::magic_sz);
+	std::streamsize nread = src_->sgetn(source_magic.data(), Config::magic_sz);
+	if (memcmp(Config::magic, source_magic.data(), Config::magic_sz))
 		throw std::runtime_error("iSnappyStreambuf - bad magic number");
 	this->setg(0, 0, 0);
 }
